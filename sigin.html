@@ -1,114 +1,120 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registro - Equilibrio Animal</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro - Depuración Base64</title>
 
-  <!-- Bootstrap -->
+  <!-- Bootstrap (opcional) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>body{padding-top:40px;background:#f6f8fa}</style>
 </head>
-
-<body class="bg-light">
-  <div class="container mt-5">
-    <div class="card shadow p-4 mx-auto" style="max-width: 400px;">
-      <h3 class="text-center mb-4">Crear cuenta</h3>
+<body>
+  <div class="container">
+    <div class="card mx-auto" style="max-width:480px;padding:20px;">
+      <h4 class="mb-3 text-center">Registro (depuración Base64)</h4>
 
       <form id="registroForm">
         <div class="mb-3">
-          <label for="usuario" class="form-label">Nombre de usuario</label>
-          <input type="text" id="usuario" class="form-control" required />
+          <label for="usuario" class="form-label">Usuario</label>
+          <input id="usuario" class="form-control" required />
         </div>
 
         <div class="mb-3">
-          <label for="correo" class="form-label">Correo electrónico</label>
-          <input type="email" id="correo" class="form-control" required />
+          <label for="correo" class="form-label">Correo</label>
+          <input id="correo" type="email" class="form-control" required />
         </div>
 
         <div class="mb-3">
           <label for="contraseña" class="form-label">Contraseña</label>
-          <input type="password" id="contraseña" class="form-control" required />
-          <small class="text-muted">
-            Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo (!@#$%^&*_-)
-          </small>
+          <input id="contraseña" type="password" class="form-control" required />
+          <small class="text-muted">Se codificará en Base64 antes de guardar.</small>
         </div>
 
-        <button type="submit" id="btnRegistro" class="btn btn-primary w-100">Registrarme</button>
+        <button id="btnRegistro" class="btn btn-primary w-100" type="submit">Registrarme</button>
       </form>
 
-      <div id="mensaje" class="mt-3 text-center"></div>
+      <div id="mensaje" class="mt-3"></div>
     </div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener('DOMContentLoaded', () => {
       // === Inicializar Supabase ===
+      if (!window.supabase) {
+        document.getElementById('mensaje').innerHTML =
+          '<div class="alert alert-danger">No se cargó la librería Supabase.</div>';
+        return;
+      }
+
       const { createClient } = window.supabase;
       const supabaseUrl = "https://erxgjoacksfghrddptvn.supabase.co";
-      const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0";
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0";
       const supabase = createClient(supabaseUrl, supabaseKey);
 
-      // === Validar contraseña ===
-      function validarContraseña(contraseña) {
-        const regex =
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
-        return regex.test(contraseña);
+      // Validación simple de contraseña (misma que venías usando)
+      function validarContraseña(pass) {
+        const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
+        return re.test(pass);
       }
 
-      // === Mostrar mensaje ===
-      function mostrar(mensaje, tipo = "danger") {
-        const contenedor = document.getElementById("mensaje");
-        contenedor.innerHTML = `<div class="alert alert-${tipo}" role="alert">${mensaje}</div>`;
+      function mostrar(msg, tipo = 'danger') {
+        document.getElementById('mensaje').innerHTML =
+          `<div class="alert alert-${tipo}" role="alert">${msg}</div>`;
       }
 
-      // === Evento de formulario ===
-      const form = document.getElementById("registroForm");
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      const form = document.getElementById('registroForm');
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
 
-        const usuario = document.getElementById("usuario").value.trim();
-        const correo = document.getElementById("correo").value.trim();
-        const contraseña = document.getElementById("contraseña").value;
+        const usuario = document.getElementById('usuario').value.trim();
+        const correo = document.getElementById('correo').value.trim();
+        const contraseña = document.getElementById('contraseña').value;
 
         if (!usuario || !correo || !contraseña) {
-          mostrar("Por favor completa todos los campos.");
+          mostrar('Completa todos los campos.');
           return;
         }
-
         if (!validarContraseña(contraseña)) {
-          mostrar(
-            "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, un número y un símbolo especial (!@#$%^&*_-)."
-          );
+          mostrar('Contraseña inválida. Debe tener mayúscula, minúscula, número y símbolo y al menos 8 chars.');
           return;
         }
 
-        // Encriptar contraseña
+        // 1) Codificar en Base64 y mostrar en consola para depurar
         const contraseñaBase64 = btoa(contraseña);
+        console.log('>> contraseña original:', contraseña);
+        console.log('>> contraseña codificada (Base64):', contraseñaBase64);
 
+        // 2) Preparar objeto que enviaremos: usamos la clave como string para evitar problemas con caracteres no-ASCII
+        //    Aquí suponemos que tu columna en Supabase se llama exactamente "contraseña"
+        const objetoInsert = {
+          usuario: usuario,
+          correo: correo,
+          'contraseña': contraseñaBase64   // notar la clave entre comillas
+        };
+
+        console.log('>> objeto que se enviará a Supabase:', objetoInsert);
+
+        // 3) Insert y mostrar respuesta completa (para depuración)
         try {
-          const { data, error } = await supabase
-            .from("usuarios")
-            .insert([{ usuario, correo, contraseña: contraseñaBase64 }]);
+          const { data, error, status } = await supabase
+            .from('usuarios') // revisa que la tabla sea "usuarios"
+            .insert([ objetoInsert ]);
+
+          console.log('>> supabase response status:', status, ' error:', error, ' data:', data);
 
           if (error) {
-            console.error("Error Supabase:", error);
-            mostrar("Error al registrar el usuario. Ver consola.");
+            mostrar('Error al insertar en Supabase. Mira la consola para más detalles.');
             return;
           }
 
-          mostrar("¡Registro exitoso!", "success");
+          mostrar('Registro exitoso (verifica en la tabla).', 'success');
           form.reset();
-
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 2000);
-        } catch (err) {
-          console.error("Error inesperado:", err);
-          mostrar("Ocurrió un error inesperado. Intenta nuevamente.");
+        } catch (e) {
+          console.error('Error inesperado:', e);
+          mostrar('Error inesperado. Revisa la consola.');
         }
       });
     });
