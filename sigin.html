@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registro / Inicio de sesión - Equilibrio Animal</title>
+  <title>Registro - Equilibrio Animal</title>
 
   <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body class="bg-light">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
 
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-light">
   <div class="container mt-5">
     <div class="card shadow p-4 mx-auto" style="max-width: 400px;">
       <h3 class="text-center mb-4">Crear cuenta</h3>
 
       <form id="registroForm">
         <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre</label>
-          <input type="text" id="nombre" class="form-control" required />
+          <label for="usuario" class="form-label">Nombre de usuario</label>
+          <input type="text" id="usuario" class="form-control" required />
         </div>
 
         <div class="mb-3">
@@ -40,18 +46,79 @@
     </div>
   </div>
 
-  <!-- IMPORTANTE: La librería de Supabase DEBE cargarse antes de usar window.supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    // --- Comprobación rápida de carga de la librería ---
-    if (!window.supabase) {
-      document.getElementById('mensaje').innerHTML =
-        '<div class="alert alert-danger">Error: no se cargó la librería de Supabase. Revisa la conexión a internet o la URL del CDN.</div>';
-      throw new Error('window.supabase is undefined');
+    // === Inicializar Supabase ===
+    const { createClient } = window.supabase;
+    const supabaseUrl = "https://erxgjoacksfghrddptvn.supabase.co";
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // === Validar contraseña segura ===
+    function validarContraseña(contraseña) {
+      const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
+      return regex.test(contraseña);
     }
 
-    // === Inicializar Supabase ===
-    const { createClient } = window.supabase; // toma createClient del objeto global
-    const supabaseUrl = "https://erxgjoacksfghrddptvn.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV
+    // === Mostrar mensajes ===
+    function mostrar(mensaje, tipo = "danger") {
+      const contenedor = document.getElementById("mensaje");
+      contenedor.innerHTML = `<div class="alert alert-${tipo}" role="alert">${mensaje}</div>`;
+    }
+
+    // === Evento del formulario ===
+    document.getElementById("registroForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const usuario = document.getElementById("usuario").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const contraseña = document.getElementById("contraseña").value;
+
+      // Validaciones
+      if (!usuario || !correo || !contraseña) {
+        mostrar("Por favor completa todos los campos.");
+        return;
+      }
+
+      if (!validarContraseña(contraseña)) {
+        mostrar(
+          "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, un número y un símbolo especial (!@#$%^&*_-)."
+        );
+        return;
+      }
+
+      // === Encriptar contraseña en Base64 ===
+      const contraseñaBase64 = btoa(contraseña);
+
+      try {
+        // === Enviar datos a la tabla 'usuarios' ===
+        const { data, error } = await supabase.from("usuarios").insert([
+          {
+            usuario,
+            correo,
+            contraseña: contraseñaBase64,
+          },
+        ]);
+
+        if (error) {
+          console.error("Error Supabase:", error);
+          mostrar("Error al registrar el usuario. Intenta nuevamente.");
+          return;
+        }
+
+        mostrar("¡Registro exitoso!", "success");
+        document.getElementById("registroForm").reset();
+
+        // Redirigir al login después de 2 segundos
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      } catch (err) {
+        console.error("Error inesperado:", err);
+        mostrar("Ocurrió un error inesperado. Intenta nuevamente.");
+      }
+    });
+  </script>
+</body>
+</html>
