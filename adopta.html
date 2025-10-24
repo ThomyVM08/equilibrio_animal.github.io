@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,35 +22,31 @@
   <button class="menu-toggle" onclick="toggleMenu()">☰ Menú</button>
   <ul id="navMenu">
     <li><a href="index.html">Inicio</a></li>
-    <li><a href="nosotros.hmtl">Nosotros</a></li>
+    <li><a href="nosotros.html">Nosotros</a></li>
     <li class="dropdown">
-      <a href="servicios.hmtl" onclick="toggleSubmenu(event)">Servicios ▾</a>
+      <a href="servicios.html" onclick="toggleSubmenu(event)">Servicios ▾</a>
       <ul class="submenu">
-        <li><a href="Consulta_v.html">Consulta Veterinaria</a></li>
-        <li><a href="Urg.hmtl">Urgencias Veterinarias 24 Horas</a></li>
+        <li><a href="consulta_v.html">Consulta Veterinaria</a></li>
+        <li><a href="urg.html">Urgencias Veterinarias 24 Horas</a></li>
         <li><a href="cirugias.html">Cirugías y Desparasitación</a></li>
-        <li><a href="Adopta.html">Adopciones Responsables</a></li>
+        <li><a href="adopta.html">Adopciones Responsables</a></li>
         <li><a href="lab.html">Laboratorio Clínico Veterinario</a></li>
       </ul>
     </li>
-    <li><a href="adopciones.html">Adopciones</a></li>
+    <li><a href="adopciones.html" class="active">Adopciones</a></li>
     <li><a href="contacto.html">Contacto</a></li>
     <li><a href="citas.html">Citas</a></li>
-    <li>
-      <li>
-        <a id="sesionBtn" href="login.html">Iniciar Sesión</a>
-      </li>
-    </li>
+    <li><a id="sesionBtn" href="login.html">Iniciar Sesión</a></li>
   </ul>
 </nav>
 
-<section class="contenido">
+<section class="adopciones">
   <h2>Adopciones Responsables</h2>
-  <p>
+  <p class="intro-text">
     Adoptar una mascota es un acto de amor y compromiso. En <strong>Equilibrio Animal</strong> creemos en dar segundas oportunidades a perros y gatos que han sido rescatados de situaciones difíciles. Nuestro programa de adopciones responsables garantiza que cada animal vaya a un hogar donde recibirá amor, cuidado y respeto.
   </p>
 
-  <p>
+  <p class="intro-text">
     Evaluamos cuidadosamente tanto a los animales como a los adoptantes para asegurar una convivencia armoniosa. Además, brindamos seguimiento y orientación para garantizar el bienestar de todos los involucrados.
   </p>
 
@@ -71,34 +66,32 @@
     </ul>
   </div>
 
-  <p>
+  <p class="intro-text">
     Si estás listo para cambiar una vida y recibir amor incondicional, <strong>considera adoptar</strong>. No estás comprando una mascota, estás ganando un amigo fiel para toda la vida.
   </p>
-</section>
 
   <div class="boton-citas">
-  <a href="adopciones.html">Adopta Aquí</a>
-</div>
-
+    <a href="https://wa.me/573503399402?text=Hola!%20Estoy%20interesado%20en%20adoptar%20una%20mascota." class="btn-adoptar">Adopta Aquí 🐾</a>
+  </div>
+</section>
 
 <footer>
-  &copy; 2025 Equilibrio Animal - Todos los derechos reservados.
+  &copy; 2025 Equilibrio Animal | Todos los derechos reservados.
 </footer>
-    <script>
-    // Mostrar nombre si el usuario está en localStorage
-    const usuario = localStorage.getItem("usuario");
-    const sesionBtn = document.getElementById("sesionBtn");
 
-    if (usuario) {
+<script>
+  const usuario = localStorage.getItem("usuario");
+  const sesionBtn = document.getElementById("sesionBtn");
 
-      sesionBtn.textContent = "Cerrar Sesión";
-      sesionBtn.href = "#";
-      sesionBtn.onclick = () => {
-        localStorage.removeItem("usuario");
-        location.reload();
-      };
-    }
-  </script>
+  if (usuario) {
+    sesionBtn.textContent = "Cerrar Sesión";
+    sesionBtn.href = "#";
+    sesionBtn.onclick = () => {
+      localStorage.removeItem("usuario");
+      location.reload();
+    };
+  }
+</script>
 
 </body>
 </html>
