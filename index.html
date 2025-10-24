@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inicio - Equilibrio Animal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <a href="index.html">
+        <img src="img/logo.png" alt="Logo Equilibrio Animal" />
+      </a>
+    </div>
+    <h1>Equilibrio Animal</h1>
+    <div class="logo-container" style="visibility: hidden;">
+      <img src="img/logo.png" alt="" style="height: 80px; width: 80px;" />
+    </div>
+  </header>
+
+  <nav>
+    <ul id="navMenu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li class="dropdown">
+        <a href="servicios.html">Servicios ▾</a>
+        <ul class="submenu">
+          <li><a href="consulta_v.html">Consulta Veterinaria</a></li>
+          <li><a href="Urg.html">Urgencias Veterinarias 24 Horas</a></li>
+          <li><a href="cirugias.html">Cirugías y Desparasitación</a></li>
+          <li><a href="adopciones.html">Adopciones Responsables</a></li>
+          <li><a href="lab.html">Laboratorio Clínico Veterinario</a></li>
+        </ul>
+      </li>
+      <li><a href="adopciones.html">Adopciones</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="citas.html">Citas</a></li>
+      <li>
+        <a id="sesionBtn" href="login.html">Iniciar Sesión</a>
+      </li>
+    </ul>
+  </nav>
+
+  <section class="inicio">
+    <h2 id="bienvenidaTexto">Bienvenido a Equilibrio Animal</h2>
+    <p>
+      Tu centro de confianza para el cuidado de tus mascotas. Con pasión,
+      experiencia y dedicación, ofrecemos atención médica, adopciones y mucho más.
+    </p>
+    <img src="img/husky.webp" alt="Imagen de portada" loading="lazy" />
+  </section>
+
+  <footer>
+    &copy; 2025 Equilibrio Animal | Todos los derechos reservados
+  </footer>
+
+  <script>
+    // Mostrar nombre si el usuario está en localStorage
+    const usuario = localStorage.getItem("usuario");
+    const bienvenida = document.getElementById("bienvenidaTexto");
+    const sesionBtn = document.getElementById("sesionBtn");
+
+    if (usuario) {
+      bienvenida.textContent = `Bienvenido, ${usuario}`;
+      sesionBtn.textContent = "Cerrar Sesión";
+      sesionBtn.href = "#";
+      sesionBtn.onclick = () => {
+        localStorage.removeItem("usuario");
+        location.reload();
+      };
+    }
+  </script>
+
+</body>
+</html>
