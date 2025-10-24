@@ -173,7 +173,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const { createClient } = supabase;
+    // uso correcto: extraer createClient desde window.supabase (CDN)
+    const { createClient } = window.supabase;
     const supabaseUrl = 'https://erxgjoacksfghrddptvn.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0';
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
@@ -182,12 +183,11 @@
     const msg = document.getElementById('mensaje');
     const cancelarBtn = document.getElementById('cancelarBtn');
 
-    // === Mostrar mensajes ===
     function mostrar(msj, tipo = "danger") {
       msg.innerHTML = `<div class="alert alert-${tipo}" role="alert">${msj}</div>`;
     }
 
-    // === Validar seguridad de contraseña ===
+    // misma regex que pediste
     function validarContraseña(contraseña) {
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
       return regex.test(contraseña);
@@ -205,7 +205,7 @@
       const nombre = form.nombre.value.trim();
       const correo = form.correo.value.trim();
       const usuario = form.usuario.value.trim();
-      const contraseña = form.contraseña.value.trim();
+      const contraseña = form['contraseña'].value.trim();
 
       if (!nombre || !correo || !usuario || !contraseña) {
         mostrar("Por favor complete todos los campos.");
@@ -217,28 +217,35 @@
         return;
       }
 
-      // === Encriptar contraseña en Base64 ===
+      // codificar a Base64
       const contraseñaEncriptada = btoa(contraseña);
+      console.log('Enviando a Supabase -> usuario:', usuario, 'correo:', correo, 'contraseña(Base64):', contraseñaEncriptada);
 
-      // Verificar si el usuario ya existe
+      // verificar existencia de usuario (tabla 'registro' como en tu original)
       const { data: existente, error: errorExistente } = await supabaseClient
         .from('registro')
         .select('usuario')
         .eq('usuario', usuario)
         .maybeSingle();
 
+      if (errorExistente) {
+        console.error('Error comprobando existencia:', errorExistente);
+        mostrar("Error al verificar usuario. Revisa la consola.");
+        return;
+      }
+
       if (existente) {
         mostrar("El usuario ya existe. Intente con otro nombre de usuario.");
         return;
       }
 
-      // Insertar nuevo usuario
+      // insertar (usamos campo 'contraseña' tal cual en tu DB)
       const { error } = await supabaseClient
         .from('registro')
-        .insert([{ usuario, correo, contraseña: contraseñaEncriptada, fecha_registro: new Date().toISOString() }]);
+        .insert([{ nombre, correo, usuario, contraseña: contraseñaEncriptada, fecha_registro: new Date().toISOString() }]);
 
       if (error) {
-        console.error(error);
+        console.error('Error insert:', error);
         mostrar("Error al registrar el usuario.");
         return;
       }
