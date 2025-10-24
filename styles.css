@@ -698,36 +698,79 @@ button[type="button"]:hover {
   background-color: #45a049;
 }
 
-/*Adopciones*/
+/* Sección de adopciones */
+.adopciones {
+  background-color: #ffffff;
+  margin: 40px auto;
+  padding: 40px 20px;
+  max-width: 1000px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
 
+.adopciones h2 {
+  color: #2bb2a2;
+  font-size: 2.2em;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(43,178,162,0.4);
+}
+
+.adopciones .intro-text {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+/* Tarjetas de adopción */
+.animal {
+  background-color: #e1f2f1;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.animal:hover {
+  transform: translateY(-5px);
+}
+
+.animal img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.animal h3 {
+  color: #23988b;
+  font-size: 1.4em;
+  margin-top: 12px;
+}
+
+.animal p {
+  color: #444;
+  font-size: 1em;
+  line-height: 1.5;
+  margin: 8px 0 14px;
+}
+
+/* Botón adoptar */
 .boton-adoptar {
   display: inline-block;
-  background-color: #2bb2a2; 
+  background-color: #2bb2a2;
   color: white;
   padding: 10px 22px;
   border-radius: 10px;
   text-decoration: none;
   font-weight: bold;
-  font-size: 1em;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(43, 178, 162, 0.3);
-  margin-top: 10px;
+  box-shadow: 0 3px 8px rgba(43,178,162,0.3);
 }
 
 .boton-adoptar:hover {
-  background-color: #23988b; 
-  box-shadow: 0 5px 12px rgba(30, 129, 118, 0.4);
+  background-color: #23988b;
   transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(30,129,118,0.4);
 }
-
-.boton-adoptar:active {
-  background-color: #1e8176; 
-  transform: translateY(0);
-}
-
-
-
-
-
-
-
