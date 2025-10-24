@@ -774,3 +774,99 @@ button[type="button"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(30,129,118,0.4);
 }
+
+/* Sección Adopciones Responsables */
+.adopciones {
+  background-color: #ffffff;
+  margin: 40px auto;
+  padding: 40px 20px;
+  max-width: 1000px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.adopciones h2 {
+  color: #2bb2a2;
+  font-size: 2.3em;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(43,178,162,0.4);
+}
+
+.adopciones .intro-text {
+  font-size: 1.1em;
+  line-height: 1.7;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  text-align: justify;
+}
+
+/* Galería de imágenes */
+.adopciones .galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 30px auto;
+  max-width: 900px;
+}
+
+.adopciones .galeria img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+
+.adopciones .galeria img:hover {
+  transform: scale(1.05);
+}
+
+/* Beneficios */
+.beneficios {
+  background-color: #e1f2f1;
+  padding: 25px 30px;
+  border-radius: 12px;
+  margin: 40px auto;
+  max-width: 850px;
+  box-shadow: inset 0 0 8px rgba(43,178,162,0.2);
+  text-align: left;
+}
+
+.beneficios h3 {
+  color: #23988b;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.6em;
+}
+
+.beneficios ul {
+  list-style: disc inside;
+  color: #2a6158;
+  line-height: 1.6;
+  font-size: 1.05em;
+}
+
+/* Botón adoptar */
+.btn-adoptar {
+  display: inline-block;
+  background-color: #2bb2a2;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(43,178,162,0.3);
+  font-size: 1.1em;
+}
+
+.btn-adoptar:hover {
+  background-color: #23988b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(30,129,118,0.4);
+}
+
+
