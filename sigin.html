@@ -172,6 +172,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+  function validarContraseña(contraseña) {
+    // Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
+    return regex.test(contraseña);
+  }
+</script>
+  <script>
     const { createClient } = supabase;
     const supabaseUrl = 'https://erxgjoacksfghrddptvn.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0';
@@ -215,7 +222,10 @@
         mostrar("El usuario ya existe. Intente con otro nombre de usuario.");
         return;
       }
-
+if (!validarContraseña(contraseña)) {
+  mostrar("La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, un número y un símbolo especial (!@#$%^&*_-).");
+  return;
+}
       // Insertar nuevo usuario
       const { error } = await supabaseClient
         .from('registro')
