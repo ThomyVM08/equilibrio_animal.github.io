@@ -23,6 +23,19 @@ header .logo-container {
   flex: 1;
 }
 
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 20px; 
+  padding: 10px;
+}
+
+.logo-container img {
+  height: 60px; /* ajusta el tamaño si es necesario */
+}
+
+
 header .logo-container img,
 header img {
   height: 80px;
@@ -868,5 +881,6 @@ button[type="button"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(30,129,118,0.4);
 }
+
 
 
