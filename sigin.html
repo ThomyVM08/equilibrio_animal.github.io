@@ -6,10 +6,7 @@
   <title>Registro - Equilibrio Animal</title>
 
   <!-- Bootstrap -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -39,7 +36,7 @@
           </small>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">Registrarme</button>
+        <button type="submit" id="btnRegistro" class="btn btn-primary w-100">Registrarme</button>
       </form>
 
       <div id="mensaje" class="mt-3 text-center"></div>
@@ -47,77 +44,73 @@
   </div>
 
   <script>
-    // === Inicializar Supabase ===
-    const { createClient } = window.supabase;
-    const supabaseUrl = "https://erxgjoacksfghrddptvn.supabase.co";
-    const supabaseKey =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0";
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    document.addEventListener("DOMContentLoaded", () => {
+      // === Inicializar Supabase ===
+      const { createClient } = window.supabase;
+      const supabaseUrl = "https://erxgjoacksfghrddptvn.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0";
+      const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // === Validar contraseña segura ===
-    function validarContraseña(contraseña) {
-      const regex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
-      return regex.test(contraseña);
-    }
-
-    // === Mostrar mensajes ===
-    function mostrar(mensaje, tipo = "danger") {
-      const contenedor = document.getElementById("mensaje");
-      contenedor.innerHTML = `<div class="alert alert-${tipo}" role="alert">${mensaje}</div>`;
-    }
-
-    // === Evento del formulario ===
-    document.getElementById("registroForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const usuario = document.getElementById("usuario").value.trim();
-      const correo = document.getElementById("correo").value.trim();
-      const contraseña = document.getElementById("contraseña").value;
-
-      // Validaciones
-      if (!usuario || !correo || !contraseña) {
-        mostrar("Por favor completa todos los campos.");
-        return;
+      // === Validar contraseña ===
+      function validarContraseña(contraseña) {
+        const regex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_\-])[A-Za-z\d!@#$%^&*_\-]{8,}$/;
+        return regex.test(contraseña);
       }
 
-      if (!validarContraseña(contraseña)) {
-        mostrar(
-          "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, un número y un símbolo especial (!@#$%^&*_-)."
-        );
-        return;
+      // === Mostrar mensaje ===
+      function mostrar(mensaje, tipo = "danger") {
+        const contenedor = document.getElementById("mensaje");
+        contenedor.innerHTML = `<div class="alert alert-${tipo}" role="alert">${mensaje}</div>`;
       }
 
-      // === Encriptar contraseña en Base64 ===
-      const contraseñaBase64 = btoa(contraseña);
+      // === Evento de formulario ===
+      const form = document.getElementById("registroForm");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-      try {
-        // === Enviar datos a la tabla 'usuarios' ===
-        const { data, error } = await supabase.from("usuarios").insert([
-          {
-            usuario,
-            correo,
-            contraseña: contraseñaBase64,
-          },
-        ]);
+        const usuario = document.getElementById("usuario").value.trim();
+        const correo = document.getElementById("correo").value.trim();
+        const contraseña = document.getElementById("contraseña").value;
 
-        if (error) {
-          console.error("Error Supabase:", error);
-          mostrar("Error al registrar el usuario. Intenta nuevamente.");
+        if (!usuario || !correo || !contraseña) {
+          mostrar("Por favor completa todos los campos.");
           return;
         }
 
-        mostrar("¡Registro exitoso!", "success");
-        document.getElementById("registroForm").reset();
+        if (!validarContraseña(contraseña)) {
+          mostrar(
+            "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, un número y un símbolo especial (!@#$%^&*_-)."
+          );
+          return;
+        }
 
-        // Redirigir al login después de 2 segundos
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 2000);
-      } catch (err) {
-        console.error("Error inesperado:", err);
-        mostrar("Ocurrió un error inesperado. Intenta nuevamente.");
-      }
+        // Encriptar contraseña
+        const contraseñaBase64 = btoa(contraseña);
+
+        try {
+          const { data, error } = await supabase
+            .from("usuarios")
+            .insert([{ usuario, correo, contraseña: contraseñaBase64 }]);
+
+          if (error) {
+            console.error("Error Supabase:", error);
+            mostrar("Error al registrar el usuario. Ver consola.");
+            return;
+          }
+
+          mostrar("¡Registro exitoso!", "success");
+          form.reset();
+
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 2000);
+        } catch (err) {
+          console.error("Error inesperado:", err);
+          mostrar("Ocurrió un error inesperado. Intenta nuevamente.");
+        }
+      });
     });
   </script>
 </body>
