@@ -2,47 +2,155 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contacto - Equilibrio Animal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Estilos basados en tu login -->
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #ccebea, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #2bb2a2;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header img {
+      height: 70px;
+      width: 70px;
+      border-radius: 50%;
+      margin-right: 15px;
+      border: 3px solid white;
+      transition: transform 0.3s ease;
+    }
+
+    header img:hover { transform: scale(1.05); }
+
+    header h1 {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin: 0;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      color: white;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 10px;
+    }
+
+    .contact-box {
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      padding: 40px 30px;
+      width: 400px;
+      animation: fadeIn 0.7s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #2bb2a2;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .form-label { color: #23988b; font-weight: 600; }
+
+    .btn-success {
+      background-color: #2bb2a2;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 30px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-success:hover { background-color: #23988b; }
+
+    .alert { font-size: 0.9em; margin-top: 15px; }
+
+    .links { text-align: center; margin-top: 20px; }
+    .links a { color: #2bb2a2; text-decoration: none; font-weight: bold; }
+    .links a:hover { text-decoration: underline; }
+  </style>
 
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("V_7XXS-cj433ImG5Q"); // ⚠️ Reemplaza con tu Public Key de EmailJS
+      emailjs.init("V_7XXS-cj433ImG5Q"); // ⚠️ Reemplaza con tu Public Key
     })();
   </script>
 </head>
 
-<body class="bg-light">
-  <section class="container py-5">
-    <div class="card shadow p-4 mx-auto" style="max-width: 500px;">
-      <h2 class="text-center mb-4">Contacto</h2>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="Logo Equilibrio Animal" />
+      <h1>Equilibrio Animal</h1>
+    </a>
+  </header>
+
+  <main>
+    <div class="contact-box">
+      <h2>Contáctanos</h2>
 
       <form id="registroForm">
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre</label>
-          <input type="text" id="nombre" name="nombre" class="form-control" required />
+          <input type="text" id="nombre" name="nombre" class="form-control" required>
         </div>
 
         <div class="mb-3">
           <label for="telefono" class="form-label">Teléfono</label>
-          <input type="text" id="telefono" name="telefono" class="form-control" required />
+          <input type="text" id="telefono" name="telefono" class="form-control" required>
         </div>
 
         <div class="mb-3">
           <label for="correo" class="form-label">Correo electrónico</label>
-          <input type="email" id="correo" name="correo" class="form-control" required />
+          <input type="email" id="correo" name="correo" class="form-control" required>
         </div>
 
         <button type="submit" class="btn btn-success w-100">Enviar</button>
       </form>
+
+      <div id="alerta" class="alert d-none" role="alert"></div>
     </div>
-  </section>
+  </main>
 
   <script>
     const form = document.getElementById("registroForm");
+    const alerta = document.getElementById("alerta");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -57,39 +165,42 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0", // ⚠️ Reemplaza con tu API Key
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0" // ⚠️ Igual a la anterior
+            "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyeGdqb2Fja3NmZ2hyZGRwdHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTA0NTksImV4cCI6MjA2ODg4NjQ1OX0.v0iv9fLe61PVduo3s2HIRFpgAIcMpUik3u82SGYmLE0"
           },
           body: JSON.stringify({ nombre, telefono, correo })
         });
 
         if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error("Error al guardar en Supabase: " + errorText);
+          const text = await res.text();
+          throw new Error("Error en Supabase: " + text);
         }
 
-        // 2️⃣ Enviar notificación al correo del administrador
+        // 2️⃣ Enviar correo por EmailJS
         const emailParams = {
           from_name: nombre,
           from_email: correo,
           phone: telefono,
-          message: `Nuevo contacto desde la web:\n
-                    Nombre: ${nombre}\n
-                    Teléfono: ${telefono}\n
-                    Correo: ${correo}`
+          message: `Nuevo contacto desde la web:\nNombre: ${nombre}\nTeléfono: ${telefono}\nCorreo: ${correo}`
         };
 
-        await emailjs.send("service_ez5hhuq", "template_jzhb893", emailParams); // ⚠️ Reemplaza con tus IDs
+        await emailjs.send("service_ez5hhuq", "template_jzhb893", emailParams);
 
-        alert("✅ ¡Enviado con éxito! Te contactaremos pronto.");
+        mostrarAlerta("✅ ¡Mensaje enviado con éxito! Te contactaremos pronto.", "success");
         form.reset();
-        window.location.href = "index.html";
+        setTimeout(() => window.location.href = "index.html", 2000);
 
       } catch (error) {
         console.error("❌ Error:", error);
-        alert("Error al enviar los datos. Revisa EmailJS o Supabase.");
+        mostrarAlerta("Error al enviar los datos. Verifica EmailJS o Supabase.", "danger");
       }
     });
+
+    function mostrarAlerta(texto, tipo) {
+      alerta.className = `alert alert-${tipo}`;
+      alerta.textContent = texto;
+      alerta.classList.remove("d-none");
+    }
   </script>
 </body>
 </html>
